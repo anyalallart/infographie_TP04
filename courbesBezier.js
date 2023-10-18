@@ -1,11 +1,12 @@
-// Auteur: Anya Lallart, Edouard LAMBERT, Baptiste LIBERT, Romain PIETR - groupe 4 - groupe de travail 2
+// Auteur: Anya LALLART, Edouard LAMBERT, Baptiste LIBERT, Romain PIETRI - groupe 4 - groupe de travail 2
 
 var renderer = new THREE.WebGLRenderer();
 document.body.appendChild(renderer.domElement);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.5, 1000);
-camera.position.z = 50; // Recule la camera
+const posz_camera = 50;
+camera.position.z = posz_camera; // Recule la camera
 var scene = new THREE.Scene();
 scene.add(camera);
 //fond noir
@@ -101,7 +102,7 @@ function bezierBernstein (point, t){
 }
 
 
-function Draw_Bernstein(point_control){
+function Draw_Bernstein (point_control){
     // Échantillonnez la courbe de Bézier en utilisant Bernstein
     const numberOfPoints = 1000; // Nombre de points à échantillonner
     const pointsOnBezierCurve = [];
@@ -127,46 +128,92 @@ function Draw_Bernstein(point_control){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var point_control= [
-    { x: -2, y: 0 },
-    { x: -1, y: 2 },
-    { x: 1, y: 6 },
-    {x:2, y:-3},
-    {x:3, y:2},
-    {x:4, y:0}
+    
 ];
 
 
-function affiche_point_control(point_control){
-    //affiche les point_control en bleu clair shrere
-    for (let i = 0; i < point_control.length; i++){
-        const geometry = new THREE.SphereGeometry(0.1, 32, 32);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ffff });
-        const sphere = new THREE.Mesh(geometry, material);
-        sphere.position.x = point_control[i].x;
-        sphere.position.y = point_control[i].y;
-        scene.add(sphere);
-    }
-    //trace des lignes entre les points de controle
-    for (let i = 0; i < point_control.length - 1; i++) {
-        const geometry = new THREE.BufferGeometry();
-        const vertices = new Float32Array([
-            point_control[i].x, point_control[i].y, 0,
-            point_control[i + 1].x, point_control[i + 1].y, 0
-        ]);
-        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+var plan= new THREE.PlaneGeometry(100,100,1);
+var material_plan = new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.DoubleSide});
+var plan_obj = new THREE.Mesh(plan, material_plan);
+scene.add(plan_obj);
+
+window.addEventListener('click', onclick, false);
+
+function onclick(event) {
+    var click = event;
+    
+    //tab_coord.push({x : click.clientX, y : click.clientY});
+    console.log(click.clientX +" "+ click.clientY);
+    
+    var mouse = new THREE.Vector2(); // On cree une variable mouse qui permet de recuperer les coordonnees x et y de la souris
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    console.log("x : " + mouse.x + " y: " + mouse.y);
+    
+    var raycaster = new THREE.Raycaster(); // On cree un "laser" qui permet de trouver le point de croisement avec le plan en z=0
+    raycaster.setFromCamera(mouse, camera);
+    
+    var intersects = raycaster.intersectObjects(scene.children);
+    console.log("intersect",intersects.length);
+    if (intersects.length > 0) {
+        var pointIntersection = intersects[0].point; // On recupere le point d'intersection entre le laser et le plan en z=0
         
-        const material = new THREE.LineBasicMaterial({color: 0x999999});
-        const line = new THREE.Line(geometry, material);
-        scene.add(line);
+        
+        console.log(pointIntersection);
+        //affiche les points
+        const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+        const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xeeeeee });
+        const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphereMesh.position.set(pointIntersection.x, pointIntersection.y, 1);
+        //couleur du point de controle en bleu clair
+        sphereMesh.material.color.setHex(0x00ffff);
+        scene.add(sphereMesh);
+        renderer.render(scene, camera);
+        
+        point_control.push(pointIntersection);
+        
+        console.log("point de controle",point_control);
+        //trace un trait entre les points de controle
+        if(point_control.length > 1){
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 }); 
+            const lineGeometry = new THREE.BufferGeometry().setFromPoints([point_control[point_control.length-2],point_control[point_control.length-1]]);
+            const line = new THREE.Line(lineGeometry, lineMaterial);
+            scene.add(line);
+            renderer.render(scene, camera);
+        }
     }
-}
+    
+};
+
+//quand appuie sur entré on trace la courbe
+document.addEventListener('keydown', function(event) {
+    //si espace on trace la courbe
+    if(event.keyCode == 32) {
+        //Draw_Bernstein(point_control);
+        Draw_Calsteljau(point_control);
+        renderer.render(scene, camera);
+    }
+    //si appuie sur echap on reset tout
+    else if(event.keyCode == 27) {
+        point_control= [];
+        scene.remove.apply(scene, scene.children);
+        scene.add(plan_obj);
+        renderer.render(scene, camera);
+    }
+    //si espace on trace la courbe
+    else if( event.keyCode== 13){
+        
+    }
+
+
+});
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////// Affichage //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+/*
 Draw_Bernstein(point_control)
 Draw_Calsteljau(point_control);
 affiche_point_control(point_control);
-
+*/
 renderer.render(scene, camera);
