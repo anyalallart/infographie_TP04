@@ -130,14 +130,96 @@ function Draw_Bernstein (point_control){
 var point_control= [
     
 ];
-
+function affiche_point_control(){
+    //affiche les points de controle
+    for(let i = 0; i < point_control.length; i++){
+        const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+        const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xeeeeee });
+        const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphereMesh.position.set(point_control[i].x, point_control[i].y, 1);
+        //couleur du point de controle en bleu clair
+        sphereMesh.material.color.setHex(0x00ffff);
+        scene.add(sphereMesh);
+    }
+}
+function affiche_trait(){
+    for(let i = 0; i < point_control.length; i++){
+        //trace un trait entre les points de controle
+        if(i < point_control.length-1){
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 }); 
+            const lineGeometry = new THREE.BufferGeometry().setFromPoints([point_control[i],point_control[i+1]]);
+            const line = new THREE.Line(lineGeometry, lineMaterial);
+            scene.add(line);
+        }
+    }
+}
 
 var plan= new THREE.PlaneGeometry(100,100,1);
 var material_plan = new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.DoubleSide});
 var plan_obj = new THREE.Mesh(plan, material_plan);
 scene.add(plan_obj);
 
-window.addEventListener('click', onclick, false);
+
+var pointplacerx;
+var pointplacery;
+var bool_placer_point = false;
+var indice_point ;
+
+window.addEventListener('mousedown', onclick, false);
+
+window.addEventListener('mouseup', function(event) {
+    if(bool_placer_point == true){
+        const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+        const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xeeeeee });
+        const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphereMesh.position.set(pointplacerx, pointplacery, 1);
+        //couleur du point de controle en bleu clair
+        sphereMesh.material.color.setHex(0x00ffff);
+        scene.add(sphereMesh);
+        renderer.render(scene, camera);
+        
+        point_control.push({x : pointplacerx, y : pointplacery});
+        
+        console.log("point de controle",point_control);
+        //trace un trait entre les points de controle
+        if(point_control.length > 1){
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 }); 
+            const lineGeometry = new THREE.BufferGeometry().setFromPoints([point_control[point_control.length-2],point_control[point_control.length-1]]);
+            const line = new THREE.Line(lineGeometry, lineMaterial);
+            scene.add(line);
+            renderer.render(scene, camera);
+            bool_placer_point = false;
+
+        }
+    }
+    else{
+        console.log("drag and drop")
+        var mouse = new THREE.Vector2(); // On cree une variable mouse qui permet de recuperer les coordonnees x et y de la souris
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        console.log("x : " + mouse.x + " y: " + mouse.y);
+        
+        var raycaster = new THREE.Raycaster(); // On cree un "laser" qui permet de trouver le point de croisement avec le plan en z=0
+        raycaster.setFromCamera(mouse, camera);
+        
+        var intersects = raycaster.intersectObjects(scene.children);
+        console.log("intersect",intersects.length);
+        if (intersects.length > 0) {
+            var pointIntersection = intersects[0].point; // On recupere le point d'intersection entre le laser et le plan en z=0
+            point_control[indice_point].x = pointIntersection.x;
+            point_control[indice_point].y = pointIntersection.y;
+        }    
+        //efface tout et affiche les points de controle
+        scene.remove.apply(scene, scene.children);
+        scene.add(plan_obj);
+        renderer.render(scene, camera);
+        affiche_point_control();
+        affiche_trait();
+        renderer.render(scene, camera);
+        bool_placer_point = false;
+    }
+}, false);
+
 
 function onclick(event) {
     var click = event;
@@ -160,27 +242,25 @@ function onclick(event) {
         
         
         console.log(pointIntersection);
+        pointplacerx = pointIntersection.x;
+        pointplacery = pointIntersection.y;
         //affiche les points
-        const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-        const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xeeeeee });
-        const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        sphereMesh.position.set(pointIntersection.x, pointIntersection.y, 1);
-        //couleur du point de controle en bleu clair
-        sphereMesh.material.color.setHex(0x00ffff);
-        scene.add(sphereMesh);
-        renderer.render(scene, camera);
-        
-        point_control.push(pointIntersection);
-        
-        console.log("point de controle",point_control);
-        //trace un trait entre les points de controle
-        if(point_control.length > 1){
-            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 }); 
-            const lineGeometry = new THREE.BufferGeometry().setFromPoints([point_control[point_control.length-2],point_control[point_control.length-1]]);
-            const line = new THREE.Line(lineGeometry, lineMaterial);
-            scene.add(line);
-            renderer.render(scene, camera);
+        for(let i = 0; i < point_control.length; i++){
+            
+            //si on click sur un point de controle on l'affiche pas
+            //on doit prendre en compte le diametre de la sphere
+            if(pointIntersection.x < point_control[i].x + 0.5 && pointIntersection.x > point_control[i].x - 0.5 && pointIntersection.y < point_control[i].y + 0.5 && pointIntersection.y > point_control[i].y - 0.5){
+                console.log("drag and drop");
+                bool_placer_point = false;
+                indice_point = i;
+
+
+                return;
+            }
         }
+       
+
+        bool_placer_point=true;
     }
     
 };
