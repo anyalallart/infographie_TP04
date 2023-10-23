@@ -68,6 +68,8 @@ function Draw_Calsteljau(point_control){
 
     // Créez la ligne en utilisant la géométrie et le matériau
     const bezierLine = new THREE.Line(bezierGeometry, lineMaterial);
+    //augmenter la largueur de la ligne
+    bezierLine.material.linewidth = 500;
 
     // Ajoutez la ligne à la scène
     scene.add(bezierLine);
@@ -287,6 +289,7 @@ window.addEventListener('mouseup', function(event) {
         affiche_point_control();
         affiche_trait();
         Draw_Calsteljau(point_control);
+        Draw_Bernstein(point_control);
         renderer.render(scene, camera);
         bool_placer_point = false;
 
