@@ -159,7 +159,26 @@ var material_plan = new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.Do
 var plan_obj = new THREE.Mesh(plan, material_plan);
 scene.add(plan_obj);
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////// Gestion des points de contrôle ///////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var material = new THREE.PointsMaterial({ color: 0x00ff00, size: 0.5  });
 
+var positions = [];
+var j = prompt("Combien de points de contrôle voulez-vous ?");
+for (var i = 0; i < j; i++) {
+    var x = parseFloat(prompt("Entrez la coordonnée X du point " + (i + 1)));
+    var y = parseFloat(prompt("Entrez la coordonnée Y du point " + (i + 1)));
+        point_control.push(new THREE.Vector3(x, y, 0));
+}
+
+affiche_point_control();
+affiche_trait();
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////// Gestion des événements ///////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var pointplacerx;
 var pointplacery;
 var bool_placer_point = false;
@@ -253,6 +272,16 @@ function onclick(event) {
                 console.log("drag and drop");
                 bool_placer_point = false;
                 indice_point = i;
+                //désine un point jaune
+
+                const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+                const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
+                const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+                sphereMesh.position.set(point_control[i].x, point_control[i].y, 1);
+                scene.add(sphereMesh);
+                renderer.render(scene, camera);
+
+                
 
 
                 return;
