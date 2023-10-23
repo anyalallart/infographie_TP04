@@ -29,20 +29,34 @@ function Casteljau(controlPoints, t) {
         }
     }
 
-    return points[0];//retourne le point final
+    return points;//retourne le point final
 }
+
 
 function Draw_Calsteljau(point_control){
     // Échantillonnez la courbe de Bézier en utilisant Casteljau
     const numberOfPoints = 1000; // Nombre de points à échantillonner
     const pointsOnBezierCurve = [];
-
+    var temp_point=[];
     for (let i = 0; i <= numberOfPoints; i++) {
         // Calculez le point sur la courbe de Bézier en utilisant Casteljau
         const t = i / numberOfPoints;
-        const point = Casteljau(point_control, t);//recupere le point final
+        const temp_point = Casteljau(point_control, t);//recupere le point final
+        const point= temp_point[0];
         pointsOnBezierCurve.push(new THREE.Vector3(point.x, point.y, 0));//ajoute le point final dans le tableau pour tracer la courbe
-        console.log(point)//debug
+        //reduit le nombre de point pour tracer les courbe intermédiraire
+        if(i%70==0){
+            console.log("temp point",temp_point)
+            const courbe_constructionGeometry = new THREE.BufferGeometry().setFromPoints(temp_point);
+            const lineMaterial2 = new THREE.LineBasicMaterial({ color: 0x00ffff });
+            const bezierLine2 = new THREE.Line(courbe_constructionGeometry, lineMaterial2);
+            scene.add(bezierLine2);
+
+            
+
+        }
+
+        
     }
     
     
@@ -57,6 +71,9 @@ function Draw_Calsteljau(point_control){
 
     // Ajoutez la ligne à la scène
     scene.add(bezierLine);
+
+    
+    renderer.render(scene, camera);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,30 +107,65 @@ function bezierBernstein (point, t){
     // fonction qui calcule la courbe de Bézier avec les fonctions de base de Bernstein
     var x = 0;
     var y = 0;  
+    const tab_poly = [];
     var n = point.length - 1;
     for (let i = 0; i <= point.length-1; i++){
         const coefficient = bernstein(n, i, t); // calcule les coefficients de Bernstein
         x += point[i].x * coefficient ; 
         y += point[i].y * coefficient;
+        tab_poly.push(coefficient);
+        
        
     }
     
-    return {x: x, y: y};
+    return {x: x, y: y, coef: tab_poly};
 }
+function DrawBernsteinFunctions(n) {
+    const numberOfPoints = 100; // Nombre de points à échantillonner pour chaque fonction de base
+
+    for (let i = 0; i <= n; i++) {
+        const pointsOnBernsteinFunction = [];
+        for (let j = 0; j <= numberOfPoints; j++) {
+            const t = j / numberOfPoints;
+            const coefficient = binomialCoeff(n, i) * Math.pow(t, i) * Math.pow(1 - t, n - i);
+            const x = t*20-20;
+            const y = coefficient*20-20;
+            pointsOnBernsteinFunction.push(new THREE.Vector3(x, y, 0));
+        }
+
+        const bezierGeometry = new THREE.BufferGeometry().setFromPoints(pointsOnBernsteinFunction);
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 }); // Couleur rouge
+        const bezierLine = new THREE.Line(bezierGeometry, lineMaterial);
+        scene.add(bezierLine);
+        renderer.render(scene, camera);
+    }
+}
+
+
+
+
 
 
 function Draw_Bernstein (point_control){
     // Échantillonnez la courbe de Bézier en utilisant Bernstein
     const numberOfPoints = 1000; // Nombre de points à échantillonner
     const pointsOnBezierCurve = [];
+    const tableau_fonction_base = [];
 
     for (let i = 0; i <= numberOfPoints; i++) {
         const t = i / numberOfPoints;
         const point = bezierBernstein(point_control, t);
         pointsOnBezierCurve.push(new THREE.Vector3(point.x, point.y, 0));
-        console.log(point)
+        
+
+
     }
-    
+
+    DrawBernsteinFunctions(point_control.length - 1);
+
+
+
+
     // Créez la géométrie pour la courbe de Bézier
     const bezierGeometry = new THREE.BufferGeometry().setFromPoints(pointsOnBezierCurve);
     const lineMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 }); 
@@ -234,8 +286,10 @@ window.addEventListener('mouseup', function(event) {
         renderer.render(scene, camera);
         affiche_point_control();
         affiche_trait();
+        Draw_Calsteljau(point_control);
         renderer.render(scene, camera);
         bool_placer_point = false;
+
     }
 }, false);
 
@@ -298,7 +352,7 @@ function onclick(event) {
 document.addEventListener('keydown', function(event) {
     //si espace on trace la courbe
     if(event.keyCode == 32) {
-        //Draw_Bernstein(point_control);
+        Draw_Bernstein(point_control);
         Draw_Calsteljau(point_control);
         renderer.render(scene, camera);
     }
@@ -320,9 +374,5 @@ document.addEventListener('keydown', function(event) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////// Affichage //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-Draw_Bernstein(point_control)
-Draw_Calsteljau(point_control);
-affiche_point_control(point_control);
-*/
+
 renderer.render(scene, camera);
