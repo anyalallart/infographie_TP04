@@ -21,38 +21,47 @@ function Casteljau(controlPoints, t) {
     //applique l'algorithme de Casteljau
     const n = controlPoints.length - 1;
     const points = controlPoints.map(p => ({ x: p.x, y: p.y }));//fait une copie de controlPoints et le met dans un tableau d'object
-
+    const steps=[]
     for (let k = 0; k < n; k++) {
         for (let i = 0; i < n - k; i++) {
             points[i].x = (1 - t) * points[i].x + t * points[i + 1].x;//applique la formule de Casteljau
-            points[i].y = (1 - t) * points[i].y + t * points[i + 1].y;
-        }
+            points[i].y = (1 - t) * points[i].y + t * points[i + 1].y; 
+            steps.push(points.map(p => ({ x: p.x, y: p.y })));
+        }       
     }
-
-    return points;//retourne le point final
+    return { finalPoints: points, steps: steps };
 }
 
+function Draw_Construction_Calsteljau(point_control){
+    
+}
 
 function Draw_Calsteljau(point_control){
     // Échantillonnez la courbe de Bézier en utilisant Casteljau
-    const numberOfPoints = 1000; // Nombre de points à placer
+    const numberOfPoints = 3000; // Nombre de points à placer
     const pointsOnBezierCurve = [];
     var temp_point=[];
+    const construction_points=[];
     for (let i = 0; i <= numberOfPoints; i++) {
         // Calculez le point sur la courbe de Bézier en utilisant Casteljau
         const t = i / numberOfPoints;
-        const temp_point = Casteljau(point_control, t);//recupere le point final
-        const point= temp_point[0];
+        const temp_point = Casteljau(point_control, t);//recupere tous les points
+        const point= temp_point.finalPoints[0];//recupere le point final
         pointsOnBezierCurve.push(new THREE.Vector3(point.x, point.y, 0));//ajoute le point final dans le tableau pour tracer la courbe
-        //reduit le nombre de point pour tracer les courbe intermédiraire
-        if(i%70==0){
-            
-            const courbe_constructionGeometry = new THREE.BufferGeometry().setFromPoints(temp_point);
-            const lineMaterial2 = new THREE.LineBasicMaterial({ color: 0x00ffff });
-            const bezierLine2 = new THREE.Line(courbe_constructionGeometry, lineMaterial2);
-            scene.add(bezierLine2);
-        }        
+        construction_points.push(temp_point.steps);//ajoute les points de construction dans le tableau
     }    
+    //affiche les ligne de construction
+
+    for(let i = 0; i < construction_points.length; i+=50){
+        for(let j = 0; j < construction_points[i].length; j++){
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x00ffff }); 
+            const lineGeometry = new THREE.BufferGeometry().setFromPoints([construction_points[i][j][0],construction_points[i][j][1]]);
+            const line = new THREE.Line(lineGeometry, lineMaterial);
+            scene.add(line);
+
+        }
+    }
+
     // Créez la géométrie pour la courbe de Bézier
     const bezierGeometry = new THREE.BufferGeometry().setFromPoints(pointsOnBezierCurve);
 
@@ -79,19 +88,17 @@ function binomialCoeff (n, k){
     if(k < 0 || k > n) return 0;
     if(k === 0 || k === n) return 1; 
     if(k === 1 || k === n - 1) return n;
-    
     let res = n; 
     for(let i = 2; i <= k; i++){ 
       res *= (n - i + 1) / i; 
     } 
-    
-    return Math.round(res); 
+    return Math.round(res); // arrondi à l'entier le plus proche
   } 
 
 
 function bernstein (n, i, t){
     // fonction qui calcule les fonctions de base de Bernstein
-    b = binomialCoeff(n,i) * Math.pow(t,i) * Math.pow(1 - t, n-i);
+    b =binomialCoeff(n, i) * Math.pow(t, i) * Math.pow(1 - t, n - i)
     return b;
 }
 
@@ -118,7 +125,7 @@ function DrawBernsteinFunctions(n) {
         const pointsOnBernsteinFunction = [];
         for (let j = 0; j <= numberOfPoints; j++) {//on calcule les points de la fonction de base de Bernstein
             const t = j / numberOfPoints;
-            const coefficient = binomialCoeff(n, i) * Math.pow(t, i) * Math.pow(1 - t, n - i);//on applique la formule du polynome de Bernstein
+            const coefficient = bernstein(n,i,t)//on applique la formule du polynome de Bernstein
             const x = t*20-20;//on ajuste les coordonnée pour que la courbe soit visible et placé correctement
             const y = coefficient*20-20;
             pointsOnBernsteinFunction.push(new THREE.Vector3(x, y, 0));//on push dans un vecteur de points
@@ -149,7 +156,7 @@ function Draw_Bernstein (point_control){
     const bezierGeometry = new THREE.BufferGeometry().setFromPoints(pointsOnBezierCurve);
     const lineMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 }); 
     const bezierLine = new THREE.Line(bezierGeometry, lineMaterial);
-
+    bezierLine.material.linewidth = 500;
     // Ajoutez la ligne à la scène
     scene.add(bezierLine);
 }
@@ -269,7 +276,7 @@ window.addEventListener('mouseup', function(event) {
         affiche_point_control();
         affiche_trait();
         Draw_Calsteljau(point_control);
-        Draw_Bernstein(point_control);
+        //Draw_Bernstein(point_control);
         renderer.render(scene, camera);
         bool_placer_point = false;
 
@@ -329,7 +336,7 @@ document.addEventListener('keydown', function(event) {
     //si espace on trace la courbe
     if(event.keyCode == 32) {
         Draw_Bernstein(point_control);
-        Draw_Calsteljau(point_control);
+        
         renderer.render(scene, camera);
     }
     //si appuie sur echap on reset tout
@@ -341,7 +348,7 @@ document.addEventListener('keydown', function(event) {
     }
     //si espace on trace la courbe
     else if( event.keyCode== 13){
-        
+        Draw_Calsteljau(point_control);
     }
 
 
