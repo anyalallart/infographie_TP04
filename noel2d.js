@@ -54,14 +54,14 @@ const sourire = [
 const oeil1 = [
     { x: -2, y: 10 },
     { x: -1, y: 10 },
-    { x: -1, y: 10 },
+    { x: -1, y: 9 },
     { x: -2, y: 10 },
 ];
 
 const oeil2 = [
     { x: 2, y: 10 },
     { x: 1, y: 10 },
-    { x: 1, y: 10 },
+    { x: 1, y: 9 },
     { x: 2, y: 10 },
 ];
 
@@ -73,28 +73,69 @@ function drawBezierSnowMen(line, color) {
     Draw_Calsteljau(line, color);
 
     // Affiche les points de contrôle
-    for (let i = 0; i < line.length; i++) {
-        const sphereGeometry = new THREE.SphereGeometry(0.2, 32, 32);
-        // couleur gris
-        const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x808080 });
-        const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        sphereMesh.position.set(line[i].x, line[i].y, 1);
-        scene.add(sphereMesh);
+    if (point.checked) {
+      for (let i = 0; i < line.length; i++) {
+          const sphereGeometry = new THREE.SphereGeometry(0.2, 32, 32);
+          // couleur gris
+          const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x808080 });
+          const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+          sphereMesh.position.set(line[i].x, line[i].y, 1);
+          scene.add(sphereMesh);
+      }
     }
-
+    colorSnowMen(line, color);
     // Affiche la line
     renderer.render(scene, camera);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////// Coloriage //////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Fonction pour colorier le bonhomme de neige
+function colorSnowMen(line, color) {
+  // Échantillonnez la courbe de Bézier en utilisant Casteljau
+  const numberOfPoints = 1000; // Nombre de points à placer
+  const pointsOnBezierCurve = [];
+
+  for (let i = 0; i <= numberOfPoints; i++) {
+    const t = i / numberOfPoints;
+    const temp_point = Casteljau(line, t); // Utilisez la fonction Casteljau pour obtenir les points sur la courbe
+    const point = temp_point.finalPoints[0];
+    pointsOnBezierCurve.push(new THREE.Vector3(point.x, point.y, 0));
+  }
+  // Ajoute les points nécessaires pour former une boucle fermée
+  pointsOnBezierCurve.push(new THREE.Vector2(line[0].x, line[0].y));
+
+  // Crée une forme fermée à partir des points
+  const shape = new THREE.Shape(pointsOnBezierCurve);
+  const geometry = new THREE.ShapeGeometry(shape);
+  const material = new THREE.MeshBasicMaterial({ color });
+  const mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
+
+  // Rend la scène
+  renderer.render(scene, camera);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////// Dessin /////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 // Appelle la fonction pour dessiner
-drawBezierSnowMen(boule1, 0xffffff);
-drawBezierSnowMen(boule2, 0xffffff); 
-drawBezierSnowMen(boule3, 0xffffff);
-drawBezierSnowMen(carotte, 0xffa500); 
-drawBezierSnowMen(sourire, 0xff0000); 
-drawBezierSnowMen(oeil1, 0x0000ff); 
-drawBezierSnowMen(oeil2, 0x0000ff);
+function draw_2d() {
+  drawBezierSnowMen(boule1, 0xffffff);
+  drawBezierSnowMen(boule2, 0xffffff); 
+  drawBezierSnowMen(boule3, 0xffffff);
+  drawBezierSnowMen(carotte, 0xffa500); 
+  drawBezierSnowMen(sourire, 0xff0000); 
+  drawBezierSnowMen(oeil1, 0x0000ff); 
+  drawBezierSnowMen(oeil2, 0x0000ff);
+}
+
+draw_2d();
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////// Neige ////////////////////////////////////////////////////////////////////

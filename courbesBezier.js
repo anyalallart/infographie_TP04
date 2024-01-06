@@ -60,9 +60,8 @@ function Draw_Calsteljau(point_control, color) {
 /////////////////////////////////////////////// Gestion des événements avec bouton ///////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-let material = new THREE.PointsMaterial({ color: 0x00ff00, size: 0.5 });
-
 // on récupère les inputs
 let button2d = document.getElementById('show_2d');
 let button3d = document.getElementById('show_3d');
+let point = document.getElementById('point');
 
