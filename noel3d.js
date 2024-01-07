@@ -1,6 +1,6 @@
 // Auteur: Anya LALLART, Edouard LAMBERT, Baptiste LIBERT, Romain PIETRI - groupe Zariel - groupe de travail 2
 
-
+scene.background = new THREE.Color(0xCEECF5);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////// Courbe de Bézier avec De Casteljau /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -176,41 +176,42 @@ const chapeau_3D = [
     { x: 2, y: 14, z: 0 },
     { x: 2, y: 11, z: 0 },
 ];
-const sol =[
-    { x: -50, y: -10 },
-    { x: 0, y: -70 },
-    { x: 50, y: -10 },
-    ]
-    
-    const ombrebonhomme = [
-    { x: -3, y: -13.5},
-    { x: 13, y: -8 },
-    { x: 3 , y: -13.5 },
-    ]
-      
-//dessine 4 montagnes, elles sont au nombre de 4 pour que le bonhomme de neige soit au centre de la scÃ¨ne, elles sont derriere le bonhomme de neige et GRANDES
+const sol = [
+    { x: -50, y: -10, z: 0 },
+    { x: 0, y: -70, z: 0 },
+    { x: 50, y: -10, z: 0 },
+];
+
+const ombrebonhomme = [
+    { x: -3, y: -13.5, z: 0 },
+    { x: 13, y: -8, z: 0 },
+    { x: 3, y: -13.5, z: 0 },
+];
+
 const montagne1 = [
-    { x: -50, y: -10 },
-    { x: -40, y: 20 },
-    { x: -25, y: 20 },
-    { x: -15, y: -10 },
-    ];
-    const montagne1ombre = [
-    { x: -50, y: -10.1 },
-    { x: -40, y: 20.1 },
-    { x: -24.9, y: 20.1 },
-    { x: -14.9, y: -10 },
+    { x: -50, y: -10, z: 0 },
+    { x: -40, y: 20, z: 0 },
+    { x: -25, y: 20, z: 0 },
+    { x: -15, y: -10, z: 0 },
+];
+
+const montagne1ombre = [
+    { x: -50, y: -10.1, z: 0 },
+    { x: -40, y: 20.1, z: 0 },
+    { x: -24.9, y: 20.1, z: 0 },
+    { x: -14.9, y: -10, z: 0 },
+];
+
+const montagne1neige = [
+    { x: -38.8, y: 10, z: 0 },
+    { x: -32.5, y: 15, z: 0 },
+    { x: -26.2, y: 10, z: 0 },
+];
+
     
-    ];
-    const montagne1neige = [//met de la neige en haut de la montagne
-    { x: -38.8, y: 10 },
-    { x: -32.5, y: 15 },
-    { x: -26.2, y: 10 },
-    ];
-    
-    const montagne2 = montagne1.map((point) => ({ x: point.x + 20, y: point.y*0.9 }));
-    const montagne2ombre = montagne1ombre.map((point) => ({ x: point.x + 20, y: point.y*0.9 }));
-    const montagne2neige = montagne1neige.map((point) => ({ x: point.x + 20, y: point.y *0.9}));
+    const montagne2 = montagne1.map((point) => ({ x: point.x + 20, y: point.y*0.9 ,z:0}));
+    const montagne2ombre = montagne1ombre.map((point) => ({ x: point.x + 20, y: point.y*0.9 ,z:0}));
+    const montagne2neige = montagne1neige.map((point) => ({ x: point.x + 20, y: point.y *0.9 ,z:0}));
     
     for (let i = 0; i < montagne2.length; i++) {
     montagne2[i].y = montagne2[i].y - 1;
@@ -223,9 +224,9 @@ const montagne1 = [
     }
     
     
-    const montagne3 = montagne1.map((point) => ({ x: point.x + 40, y: point.y *1.1}));
-    const montagne3ombre = montagne1ombre.map((point) => ({ x: point.x + 40, y: point.y *1.1}));
-    const montagne3neige = montagne1neige.map((point) => ({ x: point.x + 40, y: point.y *1.1}));
+    const montagne3 = montagne1.map((point) => ({ x: point.x + 40, y: point.y *1.1 ,z:0}));
+    const montagne3ombre = montagne1ombre.map((point) => ({ x: point.x + 40, y: point.y *1.1,z:0}));
+    const montagne3neige = montagne1neige.map((point) => ({ x: point.x + 40, y: point.y *1.1,z:0}));
     
     for (let i = 0; i < montagne3.length; i++) {
     montagne3[i].y = montagne3[i].y +1;
@@ -238,9 +239,9 @@ const montagne1 = [
     montagne3neige[i].y = montagne3neige[i].y +1;
     }
     
-    const montagne4 = montagne1.map((point) => ({ x: point.x + 60, y: point.y *0.8}));
-    const montagne4ombre = montagne1ombre.map((point) => ({ x: point.x + 60, y: point.y *0.8}));
-    const montagne4neige = montagne1neige.map((point) => ({ x: point.x + 60, y: point.y *0.8}));
+    const montagne4 = montagne1.map((point) => ({ x: point.x + 60, y: point.y *0.8,z:0}));
+    const montagne4ombre = montagne1ombre.map((point) => ({ x: point.x + 60, y: point.y *0.8,z:0}));
+    const montagne4neige = montagne1neige.map((point) => ({ x: point.x + 60, y: point.y *0.8,z:0}));
     
     for (let i = 0; i < montagne4.length; i++) {
     montagne4[i].y = montagne4[i].y - 2;
@@ -293,10 +294,17 @@ function colorSnowMen3D(line, color,name="",zindex=0) {
     // Crée une forme fermée à partir des points
     
     const shape = new THREE.Shape(pointsOnBezierCurve);
-    const extrudeSettings = {
-        depth: 5, // profondeur de l'extrusion
+     extrudeSettings = {
+        depth: 0, // profondeur de l'extrusion
         bevelEnabled: false,
     };
+
+    if(name=="bonhomme"){
+         extrudeSettings = {
+            depth: 5, // profondeur de l'extrusion
+            bevelEnabled: false,
+        };
+    }
     
     // Créez la géométrie extrudée
     const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
