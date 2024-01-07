@@ -176,81 +176,81 @@ const chapeau_3D = [
     { x: 2, y: 14, z: 0 },
     { x: 2, y: 11, z: 0 },
 ];
-const sol = [
+const sol_3D = [
     { x: -50, y: -10, z: 0 },
     { x: 0, y: -70, z: 0 },
     { x: 50, y: -10, z: 0 },
 ];
 
-const ombrebonhomme = [
+const ombrebonhomme_3D = [
     { x: -3, y: -13.5, z: 0 },
     { x: 13, y: -8, z: 0 },
     { x: 3, y: -13.5, z: 0 },
 ];
 
-const montagne1 = [
+const montagne1_3D = [
     { x: -50, y: -10, z: 0 },
     { x: -40, y: 20, z: 0 },
     { x: -25, y: 20, z: 0 },
     { x: -15, y: -10, z: 0 },
 ];
 
-const montagne1ombre = [
+const montagne1_3Dombre = [
     { x: -50, y: -10.1, z: 0 },
     { x: -40, y: 20.1, z: 0 },
     { x: -24.9, y: 20.1, z: 0 },
     { x: -14.9, y: -10, z: 0 },
 ];
 
-const montagne1neige = [
+const montagne1_3Dneige = [
     { x: -38.8, y: 10, z: 0 },
     { x: -32.5, y: 15, z: 0 },
     { x: -26.2, y: 10, z: 0 },
 ];
 
     
-    const montagne2 = montagne1.map((point) => ({ x: point.x + 20, y: point.y*0.9 ,z:0}));
-    const montagne2ombre = montagne1ombre.map((point) => ({ x: point.x + 20, y: point.y*0.9 ,z:0}));
-    const montagne2neige = montagne1neige.map((point) => ({ x: point.x + 20, y: point.y *0.9 ,z:0}));
+    const montagne2_3D = montagne1_3D.map((point) => ({ x: point.x + 20, y: point.y*0.9 ,z:0}));
+    const montagne2_3Dombre = montagne1_3Dombre.map((point) => ({ x: point.x + 20, y: point.y*0.9 ,z:0}));
+    const montagne2_3Dneige = montagne1_3Dneige.map((point) => ({ x: point.x + 20, y: point.y *0.9 ,z:0}));
     
-    for (let i = 0; i < montagne2.length; i++) {
-    montagne2[i].y = montagne2[i].y - 1;
+    for (let i = 0; i < montagne2_3D.length; i++) {
+    montagne2_3D[i].y = montagne2_3D[i].y - 1;
     }
-    for (let i = 0; i < montagne2ombre.length; i++) {
-    montagne2ombre[i].y = montagne2ombre[i].y - 1;
+    for (let i = 0; i < montagne2_3Dombre.length; i++) {
+    montagne2_3Dombre[i].y = montagne2_3Dombre[i].y - 1;
     }
-    for (let i = 0; i < montagne2neige.length; i++) {
-    montagne2neige[i].y = montagne2neige[i].y - 1;
-    }
-    
-    
-    const montagne3 = montagne1.map((point) => ({ x: point.x + 40, y: point.y *1.1 ,z:0}));
-    const montagne3ombre = montagne1ombre.map((point) => ({ x: point.x + 40, y: point.y *1.1,z:0}));
-    const montagne3neige = montagne1neige.map((point) => ({ x: point.x + 40, y: point.y *1.1,z:0}));
-    
-    for (let i = 0; i < montagne3.length; i++) {
-    montagne3[i].y = montagne3[i].y +1;
-    
-    }
-    for (let i = 0; i < montagne3ombre.length; i++) {
-    montagne3ombre[i].y = montagne3ombre[i].y +1;
-    }
-    for (let i = 0; i < montagne3neige.length; i++) {
-    montagne3neige[i].y = montagne3neige[i].y +1;
+    for (let i = 0; i < montagne2_3Dneige.length; i++) {
+    montagne2_3Dneige[i].y = montagne2_3Dneige[i].y - 1;
     }
     
-    const montagne4 = montagne1.map((point) => ({ x: point.x + 60, y: point.y *0.8,z:0}));
-    const montagne4ombre = montagne1ombre.map((point) => ({ x: point.x + 60, y: point.y *0.8,z:0}));
-    const montagne4neige = montagne1neige.map((point) => ({ x: point.x + 60, y: point.y *0.8,z:0}));
     
-    for (let i = 0; i < montagne4.length; i++) {
-    montagne4[i].y = montagne4[i].y - 2;
+    const montagne3_3D = montagne1_3D.map((point) => ({ x: point.x + 40, y: point.y *1.1 ,z:0}));
+    const montagne3_3Dombre = montagne1_3Dombre.map((point) => ({ x: point.x + 40, y: point.y *1.1,z:0}));
+    const montagne3_3Dneige = montagne1_3Dneige.map((point) => ({ x: point.x + 40, y: point.y *1.1,z:0}));
+    
+    for (let i = 0; i < montagne3_3D.length; i++) {
+    montagne3_3D[i].y = montagne3_3D[i].y +1;
+    
     }
-    for (let i = 0; i < montagne4ombre.length; i++) {
-    montagne4ombre[i].y = montagne4ombre[i].y - 2;
+    for (let i = 0; i < montagne3_3Dombre.length; i++) {
+    montagne3_3Dombre[i].y = montagne3_3Dombre[i].y +1;
     }
-    for (let i = 0; i < montagne4neige.length; i++) {
-    montagne4neige[i].y = montagne4neige[i].y - 2;
+    for (let i = 0; i < montagne3_3Dneige.length; i++) {
+    montagne3_3Dneige[i].y = montagne3_3Dneige[i].y +1;
+    }
+    
+    const montagne4_3D = montagne1_3D.map((point) => ({ x: point.x + 60, y: point.y *0.8,z:0}));
+    const montagne4_3Dombre = montagne1_3Dombre.map((point) => ({ x: point.x + 60, y: point.y *0.8,z:0}));
+    const montagne4_3Dneige = montagne1_3Dneige.map((point) => ({ x: point.x + 60, y: point.y *0.8,z:0}));
+    
+    for (let i = 0; i < montagne4_3D.length; i++) {
+    montagne4_3D[i].y = montagne4_3D[i].y - 2;
+    }
+    for (let i = 0; i < montagne4_3Dombre.length; i++) {
+    montagne4_3Dombre[i].y = montagne4_3Dombre[i].y - 2;
+    }
+    for (let i = 0; i < montagne4_3Dneige.length; i++) {
+    montagne4_3Dneige[i].y = montagne4_3Dneige[i].y - 2;
     }
 
 
@@ -327,28 +327,28 @@ function colorSnowMen3D(line, color,name="",zindex=0) {
 
   // Appelle la fonction pour dessiner
 function draw_3d() {
-    drawBezierSnowMen3D(sol, 0xE0ECF8);
+    drawBezierSnowMen3D(sol_3D, 0xE0ECF8);
   
     
-    drawBezierSnowMen3D(montagne4ombre, 0x000000);
-    drawBezierSnowMen3D(montagne4, 0x848484);
-    drawBezierSnowMen3D(montagne4neige, 0xffffff);
+    drawBezierSnowMen3D(montagne4_3Dombre, 0x000000);
+    drawBezierSnowMen3D(montagne4_3D, 0x848484);
+    drawBezierSnowMen3D(montagne4_3Dneige, 0xffffff);
   
-    drawBezierSnowMen3D(montagne3ombre, 0x000000);
-    drawBezierSnowMen3D(montagne3, 0x848484);
-    drawBezierSnowMen3D(montagne3neige, 0xffffff);
+    drawBezierSnowMen3D(montagne3_3Dombre, 0x000000);
+    drawBezierSnowMen3D(montagne3_3D, 0x848484);
+    drawBezierSnowMen3D(montagne3_3Dneige, 0xffffff);
   
-    drawBezierSnowMen3D(montagne2ombre, 0x000000);
-    drawBezierSnowMen3D(montagne2, 0x848484);
-    drawBezierSnowMen3D(montagne2neige, 0xffffff);
+    drawBezierSnowMen3D(montagne2_3Dombre, 0x000000);
+    drawBezierSnowMen3D(montagne2_3D, 0x848484);
+    drawBezierSnowMen3D(montagne2_3Dneige, 0xffffff);
   
   
     
-    drawBezierSnowMen3D(montagne1ombre, 0x000000);
-    drawBezierSnowMen3D(montagne1, 0x848484);
-    drawBezierSnowMen3D(montagne1neige, 0xffffff);
+    drawBezierSnowMen3D(montagne1_3Dombre, 0x000000);
+    drawBezierSnowMen3D(montagne1_3D, 0x848484);
+    drawBezierSnowMen3D(montagne1_3Dneige, 0xffffff);
   
-    //drawBezierSnowMen3D(ombrebonhomme, 0x000000);
+    //drawBezierSnowMen3D(ombrebonhomme_3D, 0x000000);
   
   
   
@@ -366,9 +366,62 @@ function draw_3d() {
     drawBezierSnowMen3D(bouton1_3D, 0x000000,"bonhomme",0.1);
     drawBezierSnowMen3D(bouton2_3D, 0x000000,"bonhomme",0.1);
     drawBezierSnowMen3D(bouton3_3D, 0x000000,"bonhomme",0.1);
+    
+    flakeCount = 9000;
+    for (let i = 0; i < flakeCount; i++) {
+        var flakeMesh = new THREE.Mesh(flakeGeometry, flakeMaterial);
+        flakeMesh.position.set(
+        (Math.random() - 0.5) * 70,
+        (Math.random() - 0.5) * 30,
+        (Math.random() - 0.5) * 70
+        );
+        snow.add(flakeMesh);
+    }
+  scene.add(snow);
+
+  flakeArray = snow.children;
+  var rightLight = new THREE.PointLight(0xffffff, 0.3, 0);
+  rightLight.position.set(10, 20, 7);
+
+  var leftLight = new THREE.PointLight(0xffffff, 0.3, 0);
+  leftLight.position.set(-10, 20, 7);
+
+  var ambientLight = new THREE.AmbientLight(0xffffff, 5);
+  scene.add(rightLight);
+  scene.add(leftLight);
+  scene.add(ambientLight);
 }
   
-draw_3d();
+var flakeGeometry = new THREE.TetrahedronGeometry(0.05); // radius
+var flakeMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
+var snow = new THREE.Group();
+
+for (let i = 0; i < flakeCount; i++) {
+  var flakeMesh = new THREE.Mesh(flakeGeometry, flakeMaterial);
+  flakeMesh.position.set(
+    (Math.random() - 0.5) * 70,
+    (Math.random() - 0.5) * 30,
+    (Math.random() - 0.5) * 70
+  );
+  snow.add(flakeMesh);
+}
+scene.add(snow);
+
+var flakeArray = snow.children;
+
+// lumières
+var rightLight = new THREE.PointLight(0xffffff, 0.3, 0);
+rightLight.position.set(10, 20, 7);
+
+var leftLight = new THREE.PointLight(0xffffff, 0.3, 0);
+leftLight.position.set(-10, 20, 7);
+
+var ambientLight = new THREE.AmbientLight(0xffffff, 5);
+scene.add(rightLight);
+scene.add(leftLight);
+scene.add(ambientLight);
+scene.background = new THREE.Color(0xCEECF5);
+//draw_3d();
 scene.traverse(function (mesh) {
     if (mesh instanceof THREE.Mesh && mesh.name == "bonhomme") {
         mesh.position.z+=5
@@ -376,8 +429,9 @@ scene.traverse(function (mesh) {
         
     }
 });
-function animate() {
-    requestAnimationFrame(animate);
+function animate3D() {
+    if(animate3D_bool){requestAnimationFrame(animate3D);}
+
     //recupere les meshs de la scene et les fait tourner
     scene.traverse(function (mesh) {
         if (mesh instanceof THREE.Mesh && mesh.name == "bonhomme") {
@@ -385,6 +439,28 @@ function animate() {
             mesh.rotation.y +=  0.01;
         }
     });
+    
+    for (i = 0; i < flakeArray.length / 2; i++) {
+        flakeArray[i].rotation.y += 0.01;
+        flakeArray[i].rotation.x += 0.02;
+        flakeArray[i].rotation.z += 0.03;
+        flakeArray[i].position.y -= 0.018;
+        if (flakeArray[i].position.y < -15) {
+          flakeArray[i].position.y += 30;
+        }
+      }
+      for (i = flakeArray.length / 2; i < flakeArray.length; i++) {
+        flakeArray[i].rotation.y -= 0.03;
+        flakeArray[i].rotation.x -= 0.03;
+        flakeArray[i].rotation.z -= 0.02;
+        flakeArray[i].position.y -= 0.016;
+        if (flakeArray[i].position.y < -15) {
+          flakeArray[i].position.y += 30;
+        }
+    
+        snow.rotation.y -= 0.0000002;
+      }
+    
     renderer.render(scene, camera);
 }
-animate();
+//animate();

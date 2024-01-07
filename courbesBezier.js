@@ -65,3 +65,5 @@ let button2d = document.getElementById('show_2d');
 let button3d = document.getElementById('show_3d');
 let point = document.getElementById('point');
 
+let animate2D_bool = false;
+let animate3D_bool = false;

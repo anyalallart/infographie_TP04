@@ -29,8 +29,6 @@ window.addEventListener('mousemove', function (event) {
             var deltaY = -event.clientY + previousMousePosition.y;
 
             // Ajuster la rotation de la scène en fonction du mouvement de la souris
-            scene.rotation.y += deltaX * 0.01;
-            scene.rotation.x += deltaY * 0.01;
             scene.traverse(function (mesh) {
                 if (mesh instanceof THREE.Mesh && mesh.name=="bonhomme") {
                     

@@ -301,10 +301,32 @@ function draw_2d() {
   drawBezierSnowMen(bouton2, 0x000000);
   drawBezierSnowMen(bouton3, 0x000000);
 
-  
+  flakeCount = 9000;
+  for (let i = 0; i < flakeCount; i++) {
+    var flakeMesh = new THREE.Mesh(flakeGeometry, flakeMaterial);
+    flakeMesh.position.set(
+      (Math.random() - 0.5) * 70,
+      (Math.random() - 0.5) * 30,
+      (Math.random() - 0.5) * 70
+    );
+    snow.add(flakeMesh);
+  }
+  scene.add(snow);
+
+   flakeArray = snow.children;
+  var rightLight = new THREE.PointLight(0xffffff, 0.3, 0);
+  rightLight.position.set(10, 20, 7);
+
+  var leftLight = new THREE.PointLight(0xffffff, 0.3, 0);
+  leftLight.position.set(-10, 20, 7);
+
+  var ambientLight = new THREE.AmbientLight(0xffffff, 5);
+  scene.add(rightLight);
+  scene.add(leftLight);
+  scene.add(ambientLight);
 }
 
-draw_2d();
+//draw_2d();
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -343,8 +365,9 @@ scene.add(ambientLight);
 scene.background = new THREE.Color(0xCEECF5);
 
 // camera
-var animate = function() {
-    requestAnimationFrame(animate);
+var animate2D = function() {
+  if(animate2D_bool){requestAnimationFrame(animate2D);}
+  else{console.log("stop");}
   
     for (i = 0; i < flakeArray.length / 2; i++) {
       flakeArray[i].rotation.y += 0.01;
@@ -370,7 +393,7 @@ var animate = function() {
     renderer.render(scene, camera);
 };
   
-animate();
+//animate();
   
 
 
