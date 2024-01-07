@@ -395,7 +395,7 @@ function draw_3d() {
 var flakeGeometry = new THREE.TetrahedronGeometry(0.05); // radius
 var flakeMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
 var snow = new THREE.Group();
-
+var flakeCount = 9000;
 for (let i = 0; i < flakeCount; i++) {
   var flakeMesh = new THREE.Mesh(flakeGeometry, flakeMaterial);
   flakeMesh.position.set(
