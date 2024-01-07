@@ -1,22 +1,10 @@
 // Auteur: Anya LALLART, Edouard LAMBERT, Baptiste LIBERT, Romain PIETRI - groupe Zariel - groupe de travail 2
 
-var renderer = new THREE.WebGLRenderer();
-document.body.appendChild(renderer.domElement);
-renderer.setSize(window.innerWidth, window.innerHeight);
-
-var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.5, 1000);
-const posz_camera = 50;
-camera.position.z = posz_camera; // Recule la camera
-var scene = new THREE.Scene();
-scene.add(camera);
-//fond noir
-scene.background = new THREE.Color(0x000000);
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////// Courbe de Bézier avec De Casteljau /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function Casteljau(controlPoints, t) {
+function Casteljau3D(controlPoints, t) {
     //applique l'algorithme de Casteljau
     const n = controlPoints.length - 1;
     const points = controlPoints.map(p => ({ x: p.x, y: p.y, z: p.z })); //fait une copie de controlPoints et le met dans un tableau d'object
@@ -32,7 +20,7 @@ function Casteljau(controlPoints, t) {
     return { finalPoints: points, steps: steps };
 }
 
-function Draw_Calsteljau(point_control, color) {
+function Draw_Calsteljau3D(point_control, color) {
     // Échantillonnez la courbe de Bézier en utilisant Casteljau
     const numberOfPoints = 3000; // Nombre de points à placer
     const pointsOnBezierCurve = [];
@@ -188,13 +176,88 @@ const chapeau_3D = [
     { x: 2, y: 14, z: 0 },
     { x: 2, y: 11, z: 0 },
 ];
+const sol =[
+    { x: -50, y: -10 },
+    { x: 0, y: -70 },
+    { x: 50, y: -10 },
+    ]
+    
+    const ombrebonhomme = [
+    { x: -3, y: -13.5},
+    { x: 13, y: -8 },
+    { x: 3 , y: -13.5 },
+    ]
+      
+//dessine 4 montagnes, elles sont au nombre de 4 pour que le bonhomme de neige soit au centre de la scÃ¨ne, elles sont derriere le bonhomme de neige et GRANDES
+const montagne1 = [
+    { x: -50, y: -10 },
+    { x: -40, y: 20 },
+    { x: -25, y: 20 },
+    { x: -15, y: -10 },
+    ];
+    const montagne1ombre = [
+    { x: -50, y: -10.1 },
+    { x: -40, y: 20.1 },
+    { x: -24.9, y: 20.1 },
+    { x: -14.9, y: -10 },
+    
+    ];
+    const montagne1neige = [//met de la neige en haut de la montagne
+    { x: -38.8, y: 10 },
+    { x: -32.5, y: 15 },
+    { x: -26.2, y: 10 },
+    ];
+    
+    const montagne2 = montagne1.map((point) => ({ x: point.x + 20, y: point.y*0.9 }));
+    const montagne2ombre = montagne1ombre.map((point) => ({ x: point.x + 20, y: point.y*0.9 }));
+    const montagne2neige = montagne1neige.map((point) => ({ x: point.x + 20, y: point.y *0.9}));
+    
+    for (let i = 0; i < montagne2.length; i++) {
+    montagne2[i].y = montagne2[i].y - 1;
+    }
+    for (let i = 0; i < montagne2ombre.length; i++) {
+    montagne2ombre[i].y = montagne2ombre[i].y - 1;
+    }
+    for (let i = 0; i < montagne2neige.length; i++) {
+    montagne2neige[i].y = montagne2neige[i].y - 1;
+    }
+    
+    
+    const montagne3 = montagne1.map((point) => ({ x: point.x + 40, y: point.y *1.1}));
+    const montagne3ombre = montagne1ombre.map((point) => ({ x: point.x + 40, y: point.y *1.1}));
+    const montagne3neige = montagne1neige.map((point) => ({ x: point.x + 40, y: point.y *1.1}));
+    
+    for (let i = 0; i < montagne3.length; i++) {
+    montagne3[i].y = montagne3[i].y +1;
+    
+    }
+    for (let i = 0; i < montagne3ombre.length; i++) {
+    montagne3ombre[i].y = montagne3ombre[i].y +1;
+    }
+    for (let i = 0; i < montagne3neige.length; i++) {
+    montagne3neige[i].y = montagne3neige[i].y +1;
+    }
+    
+    const montagne4 = montagne1.map((point) => ({ x: point.x + 60, y: point.y *0.8}));
+    const montagne4ombre = montagne1ombre.map((point) => ({ x: point.x + 60, y: point.y *0.8}));
+    const montagne4neige = montagne1neige.map((point) => ({ x: point.x + 60, y: point.y *0.8}));
+    
+    for (let i = 0; i < montagne4.length; i++) {
+    montagne4[i].y = montagne4[i].y - 2;
+    }
+    for (let i = 0; i < montagne4ombre.length; i++) {
+    montagne4ombre[i].y = montagne4ombre[i].y - 2;
+    }
+    for (let i = 0; i < montagne4neige.length; i++) {
+    montagne4neige[i].y = montagne4neige[i].y - 2;
+    }
 
 
 // Fonction pour dessiner le bonhomme de neige avec des courbes de Bézier
-function drawBezierSnowMen(line, color) {
+function drawBezierSnowMen3D(line, color,name="",zindex=0) {
 
     // Dessine la courbe de Bézier
-    Draw_Calsteljau(line, color);
+    //Draw_Calsteljau3D(line, color);
 
     // Affiche les points de contrôle
     if (point.checked) {
@@ -207,31 +270,47 @@ function drawBezierSnowMen(line, color) {
           scene.add(sphereMesh);
       }
     }
-    colorSnowMen(line, color);
+    colorSnowMen3D(line, color,name,zindex);
     // Affiche la line
     renderer.render(scene, camera);
 }
 
 // Fonction pour colorier le bonhomme de neige
-function colorSnowMen(line, color) {
+function colorSnowMen3D(line, color,name="",zindex=0) {
     // Échantillonnez la courbe de Bézier en utilisant Casteljau
     const numberOfPoints = 1000; // Nombre de points à placer
     const pointsOnBezierCurve = [];
 
     for (let i = 0; i <= numberOfPoints; i++) {
         const t = i / numberOfPoints;
-        const temp_point = Casteljau(line, t); // Utilisez la fonction Casteljau pour obtenir les points sur la courbe
+        const temp_point = Casteljau3D(line, t); // Utilisez la fonction Casteljau pour obtenir les points sur la courbe
         const point = temp_point.finalPoints[0];
         pointsOnBezierCurve.push(new THREE.Vector3(point.x, point.y, point.z));
     }
     // Ajoute les points nécessaires pour former une boucle fermée
-    pointsOnBezierCurve.push(new THREE.Vector2(line[0].x, line[0].y, line[0].z));
+    pointsOnBezierCurve.push(new THREE.Vector3(line[0].x, line[0].y, line[0].z));
 
     // Crée une forme fermée à partir des points
+    
     const shape = new THREE.Shape(pointsOnBezierCurve);
-    const geometry = new THREE.ShapeGeometry(shape);
+    const extrudeSettings = {
+        depth: 5, // profondeur de l'extrusion
+        bevelEnabled: false,
+    };
+    
+    // Créez la géométrie extrudée
+    const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+    
     const material = new THREE.MeshBasicMaterial({ color });
     const mesh = new THREE.Mesh(geometry, material);
+    
+    mesh.name = name;
+    // Calculez la moitié de la profondeur
+    if(name=="bonhomme")
+    {
+        mesh.position.z += 5;
+    }
+    mesh.position.z +=zindex;
     scene.add(mesh);
 
     // Rend la scène
@@ -240,45 +319,64 @@ function colorSnowMen(line, color) {
 
   // Appelle la fonction pour dessiner
 function draw_3d() {
-    drawBezierSnowMen(sol, 0xE0ECF8);
+    drawBezierSnowMen3D(sol, 0xE0ECF8);
   
     
-    drawBezierSnowMen(montagne4ombre, 0x000000);
-    drawBezierSnowMen(montagne4, 0x848484);
-    drawBezierSnowMen(montagne4neige, 0xffffff);
+    drawBezierSnowMen3D(montagne4ombre, 0x000000);
+    drawBezierSnowMen3D(montagne4, 0x848484);
+    drawBezierSnowMen3D(montagne4neige, 0xffffff);
   
-    drawBezierSnowMen(montagne3ombre, 0x000000);
-    drawBezierSnowMen(montagne3, 0x848484);
-    drawBezierSnowMen(montagne3neige, 0xffffff);
+    drawBezierSnowMen3D(montagne3ombre, 0x000000);
+    drawBezierSnowMen3D(montagne3, 0x848484);
+    drawBezierSnowMen3D(montagne3neige, 0xffffff);
   
-    drawBezierSnowMen(montagne2ombre, 0x000000);
-    drawBezierSnowMen(montagne2, 0x848484);
-    drawBezierSnowMen(montagne2neige, 0xffffff);
+    drawBezierSnowMen3D(montagne2ombre, 0x000000);
+    drawBezierSnowMen3D(montagne2, 0x848484);
+    drawBezierSnowMen3D(montagne2neige, 0xffffff);
   
   
     
-    drawBezierSnowMen(montagne1ombre, 0x000000);
-    drawBezierSnowMen(montagne1, 0x848484);
-    drawBezierSnowMen(montagne1neige, 0xffffff);
+    drawBezierSnowMen3D(montagne1ombre, 0x000000);
+    drawBezierSnowMen3D(montagne1, 0x848484);
+    drawBezierSnowMen3D(montagne1neige, 0xffffff);
   
-    drawBezierSnowMen(ombrebonhomme, 0x000000);
+    //drawBezierSnowMen3D(ombrebonhomme, 0x000000);
   
   
   
-    drawBezierSnowMen(boule1, 0xffffff);
-    drawBezierSnowMen(boule2, 0xffffff); 
-    drawBezierSnowMen(boule3, 0xffffff);
-    drawBezierSnowMen(carotte, 0xffa500); 
-    drawBezierSnowMen(sourire, 0xff0000); 
-    drawBezierSnowMen(oeil1, 0x0000ff); 
-    drawBezierSnowMen(oeil2, 0x0000ff);
+    drawBezierSnowMen3D(boule1_3D, 0xffffff, "bonhomme");
+    drawBezierSnowMen3D(boule2_3D, 0xffffff, "bonhomme"); 
+    drawBezierSnowMen3D(boule3_3D, 0xffffff,"bonhomme");
+    drawBezierSnowMen3D(carotte_3D, 0xffa500,"bonhomme",0.1); 
+    drawBezierSnowMen3D(sourire_3D, 0xff0000,"bonhomme",0.1); 
+    drawBezierSnowMen3D(oeil1_3D, 0x0000ff,"bonhomme",0.1); 
+    drawBezierSnowMen3D(oeil2_3D, 0x0000ff,"bonhomme",0.1);
   
-    drawBezierSnowMen(base_chapeau, 0x61380B);
-    drawBezierSnowMen(chapeau, 0x61380B);
+    drawBezierSnowMen3D(base_chapeau_3D, 0x61380B,"bonhomme",0.1);
+    drawBezierSnowMen3D(chapeau_3D, 0x61380B,"bonhomme",0.1);
   
-    drawBezierSnowMen(bouton1, 0x000000);
-    drawBezierSnowMen(bouton2, 0x000000);
-    drawBezierSnowMen(bouton3, 0x000000);
+    drawBezierSnowMen3D(bouton1_3D, 0x000000,"bonhomme",0.1);
+    drawBezierSnowMen3D(bouton2_3D, 0x000000,"bonhomme",0.1);
+    drawBezierSnowMen3D(bouton3_3D, 0x000000,"bonhomme",0.1);
 }
   
 draw_3d();
+scene.traverse(function (mesh) {
+    if (mesh instanceof THREE.Mesh && mesh.name == "bonhomme") {
+        mesh.position.z+=5
+
+        
+    }
+});
+function animate() {
+    requestAnimationFrame(animate);
+    //recupere les meshs de la scene et les fait tourner
+    scene.traverse(function (mesh) {
+        if (mesh instanceof THREE.Mesh && mesh.name == "bonhomme") {
+            
+            mesh.rotation.y +=  0.01;
+        }
+    });
+    renderer.render(scene, camera);
+}
+animate();
